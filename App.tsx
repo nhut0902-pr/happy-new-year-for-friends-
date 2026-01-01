@@ -12,7 +12,6 @@ const App: React.FC = () => {
     setIsStarted(true);
     setPhase(AnimationPhase.COUNTDOWN_3);
     
-    // Play music when user interacts
     if (audioRef.current) {
       audioRef.current.play().catch(err => console.log("Audio play failed:", err));
     }
@@ -64,40 +63,43 @@ const App: React.FC = () => {
 
       {!isStarted && (
         <div className="z-10 text-center animate-in fade-in zoom-in duration-1000 px-4">
-          <h1 className="text-white text-4xl md:text-6xl font-black mb-12 tracking-[0.2em] drop-shadow-[0_0_15px_rgba(255,45,117,0.8)] leading-tight">
+          <h1 className="text-white text-4xl md:text-7xl font-black mb-4 tracking-[0.2em] drop-shadow-[0_0_20px_rgba(255,45,117,0.8)] leading-tight">
             HAPPY<br/><span className="text-pink-500">NEW YEAR</span>
           </h1>
+          <div className="text-pink-400 text-3xl md:text-5xl font-black mb-12 tracking-[0.4em] drop-shadow-[0_0_10px_rgba(255,45,117,0.5)]">
+            2026
+          </div>
           <button
             onClick={startSequence}
             className="group relative px-8 py-4 md:px-12 md:py-5 bg-transparent overflow-hidden border-2 border-pink-500 text-pink-500 rounded-full text-lg md:text-2xl font-black hover:text-white transition-all duration-500 shadow-[0_0_30px_rgba(236,72,153,0.3)]"
           >
-            <span className="relative z-10 uppercase tracking-widest">Tặng bạn nhân ngày năm mới</span>
+            <span className="relative z-10 uppercase tracking-widest">Gửi lời chúc đến bạn thân</span>
             <div className="absolute inset-0 bg-pink-500 translate-y-[101%] group-hover:translate-y-0 transition-transform duration-300"></div>
           </button>
         </div>
       )}
 
       {isStarted && phase !== AnimationPhase.FINAL_MESSAGE && (
-        <div className="absolute bottom-24 left-0 w-full text-center text-pink-500/60 text-[10px] md:text-sm font-bold tracking-[0.8em] pointer-events-none uppercase drop-shadow-[0_0_5px_rgba(236,72,153,0.5)]">
+        <div className="absolute bottom-24 left-0 w-full text-center text-pink-500/80 text-[12px] md:text-lg font-bold tracking-[0.8em] pointer-events-none uppercase drop-shadow-[0_0_10px_rgba(236,72,153,0.8)]">
           Happy New Year 2026
         </div>
       )}
 
-      {/* Watermark Section - Enhanced Visibility */}
+      {/* Watermark Section */}
       <div className="absolute bottom-6 right-6 text-right flex flex-col space-y-1.5 z-20">
-        <div className="text-white/80 text-[11px] md:text-sm font-bold font-mono tracking-widest uppercase drop-shadow-md">
+        <div className="text-white/90 text-[12px] md:text-base font-bold font-mono tracking-widest uppercase drop-shadow-lg">
           code by Nhutcoder
         </div>
         <a 
           href="https://www.facebook.com/share/17fLrvXAkk/" 
           target="_blank" 
           rel="noopener noreferrer"
-          className="text-white/60 hover:text-pink-400 transition-colors text-[10px] md:text-xs font-mono flex items-center justify-end gap-1"
+          className="text-white/70 hover:text-pink-400 transition-colors text-[10px] md:text-sm font-mono flex items-center justify-end gap-1"
         >
-          <span className="opacity-70">FB:</span> Nhutcoder
+          <span>FB:</span> Nhutcoder
         </a>
-        <div className="text-white/60 text-[10px] md:text-xs font-mono flex items-center justify-end gap-1">
-          <span className="opacity-70">TikTok:</span> nhutcoder0902
+        <div className="text-white/70 text-[10px] md:text-sm font-mono flex items-center justify-end gap-1">
+          <span>TikTok:</span> nhutcoder0902
         </div>
       </div>
     </div>

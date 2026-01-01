@@ -8,11 +8,11 @@ export const COLORS = {
 
 export const TEXT_CONTENT = {
   HAPPY_NEW_YEAR: "HAPPY\nNEW YEAR\n2026",
-  NAME: "BẠN\nKIM PHỤNG",
-  ATTRIBUTES: "VUI VẺ - MAY MẮN\nTHÀNH CÔNG",
+  NAME: "CHÀO BẠN\nKIM PHỤNG",
+  ATTRIBUTES: "VUI VẺ - TRẺ ĐẸP\nMAY MẮN",
   WISH_1: "HỌC TẬP TỐT",
   WISH_2: "VẠN SỰ NHƯ Ý",
-  FINAL_MESSAGE: "THI TỐT - ĐỖ ĐẦU\nMÃI LÀ BẠN THÂN"
+  FINAL_MESSAGE: "THI TỐT - ĐỖ CAO\nMÃI LÀ BẠN THÂN"
 };
 
-export const PARTICLE_COUNT = 3000;
+export const PARTICLE_COUNT = 3500;
