@@ -18,10 +18,12 @@ interface BinaryDrop {
 const ParticleCanvas: React.FC<Props> = ({ phase }) => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const particles = useRef<Particle[]>([]);
-  const animationFrameId = useRef<number>();
-  const [dimensions, setDimensions] = useState({ width: window.innerWidth, height: window.innerHeight });
+  const animationFrameId = useRef<number>(0);
+  const [dimensions, setDimensions] = useState({ 
+    width: typeof window !== 'undefined' ? window.innerWidth : 0, 
+    height: typeof window !== 'undefined' ? window.innerHeight : 0 
+  });
 
-  // Matrix-style falling binary numbers
   const drops = useRef<BinaryDrop[]>([]);
 
   useEffect(() => {
@@ -30,7 +32,7 @@ const ParticleCanvas: React.FC<Props> = ({ phase }) => {
     };
     window.addEventListener('resize', handleResize);
     
-    // Initialize binary drops
+    // Khởi tạo mưa binary
     const fontSize = 16;
     const columns = Math.ceil(window.innerWidth / fontSize);
     drops.current = Array.from({ length: columns }, (_, i) => ({
@@ -42,12 +44,12 @@ const ParticleCanvas: React.FC<Props> = ({ phase }) => {
     }));
 
     return () => window.removeEventListener('resize', handleResize);
-  }, [dimensions.width]);
+  }, []);
 
   const createParticlesFromText = (text: string, fontSize: number = 100) => {
     const canvas = canvasRef.current;
-    if (!canvas) return [];
-    const ctx = canvas.getContext('2d');
+    if (!canvas || canvas.width === 0) return [];
+    const ctx = canvas.getContext('2d', { willReadFrequently: true });
     if (!ctx) return [];
 
     ctx.clearRect(0, 0, canvas.width, canvas.height);
@@ -78,13 +80,12 @@ const ParticleCanvas: React.FC<Props> = ({ phase }) => {
         }
       }
     }
-
     return targets;
   };
 
   const createParticlesFromHeart = () => {
     const canvas = canvasRef.current;
-    if (!canvas) return [];
+    if (!canvas || canvas.width === 0) return [];
     const targets: { x: number, y: number }[] = [];
     const scale = Math.min(canvas.width, canvas.height) / 45;
     const centerX = canvas.width / 2;
@@ -106,13 +107,14 @@ const ParticleCanvas: React.FC<Props> = ({ phase }) => {
 
   useEffect(() => {
     const canvas = canvasRef.current;
-    if (!canvas) return;
+    if (!canvas || dimensions.width === 0) return;
     const ctx = canvas.getContext('2d');
     if (!ctx) return;
 
     canvas.width = dimensions.width;
     canvas.height = dimensions.height;
 
+    // Khởi tạo hạt nếu chưa có
     if (particles.current.length === 0) {
       const count = 4000;
       for (let i = 0; i < count; i++) {
@@ -163,7 +165,8 @@ const ParticleCanvas: React.FC<Props> = ({ phase }) => {
         targets = createParticlesFromText(TEXT_CONTENT.FINAL_MESSAGE, Math.min(canvas.width * 0.1, 70));
         break;
       default:
-        targets = [];
+        // Idle phase: keep current targets or float randomly
+        break;
     }
 
     if (targets.length > 0) {
@@ -176,7 +179,6 @@ const ParticleCanvas: React.FC<Props> = ({ phase }) => {
     }
 
     const animate = () => {
-      // Background with trail
       ctx.fillStyle = 'rgba(0, 0, 0, 0.2)';
       ctx.fillRect(0, 0, canvas.width, canvas.height);
 
@@ -185,33 +187,26 @@ const ParticleCanvas: React.FC<Props> = ({ phase }) => {
       drops.current.forEach(drop => {
         for (let i = 0; i < drop.length; i++) {
           const char = drop.chars[i];
-          const opacity = (i / drop.length) * 0.25;
+          const opacity = (i / drop.length) * 0.3;
           ctx.fillStyle = `rgba(255, 45, 117, ${opacity})`;
-          // Draw character at drop.x, and offset it by the character's position in the "tail"
           ctx.fillText(char, drop.x, drop.y - (i * 15));
         }
-
         drop.y += drop.speed;
-        // Reset when the entire tail is off screen
         if (drop.y - (drop.length * 15) > canvas.height) {
           drop.y = -20;
           drop.speed = 1.5 + Math.random() * 4;
         }
-
-        // Mutation effect
         if (Math.random() > 0.98) {
           drop.chars[Math.floor(Math.random() * drop.chars.length)] = Math.random() > 0.5 ? '1' : '0';
         }
       });
 
-      // Update and Draw Particles
+      // Update Particles
       particles.current.forEach(p => {
         const dx = p.targetX - p.x;
         const dy = p.targetY - p.y;
-        
         p.x += dx * p.ease;
         p.y += dy * p.ease;
-
         ctx.fillStyle = p.color;
         ctx.beginPath();
         ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
@@ -233,7 +228,7 @@ const ParticleCanvas: React.FC<Props> = ({ phase }) => {
   return (
     <canvas
       ref={canvasRef}
-      className="absolute inset-0 block w-full h-full cursor-default"
+      className="absolute inset-0 block w-full h-full"
     />
   );
 };
